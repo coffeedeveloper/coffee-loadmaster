@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <meta name="render" content="webkit">
+    <title>测试</title>
+    <style media="screen">
+      #container {
+        height: 400px;
+        overflow: auto;
+      }
+      #container div {
+        border: 2px solid #000;
+        height: 90%;
+        margin: 0 auto;
+        height: 400px;
+        font-size: 48px;
+        line-height: 400px;
+        text-align: center;
+      }
+
+      .loaded {
+        background-color: #000;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+
+    </div>
+
+    <script type="text/javascript" src="../build/loadmaster.js"></script>
+    <script type="text/javascript">
+      var container = document.querySelector('#container');
+      var i = 0;
+      function fill() {
+        for (i = 0; i < 20; i++) {
+          var div = document.createElement('div');
+          div.appendChild(document.createTextNode(i));
+          container.appendChild(div);
+        }
+      }
+
+      fill();
+
+      var lm = new LoadMaster({
+        container: '#container',
+        items: '#container div'
+      });
+
+      lm.on('above', function(eles) {
+        // console.log(this);
+        // console.log(this == lm);
+        // console.log('above', eles);
+      });
+
+      lm.on('below', function(eles) {
+        // console.log('below', eles);
+      });
+
+      lm.on('end', function() {
+        console.log('come to end');
+        var end = i + 10;
+
+        if (end >= 40) this.off();
+
+        for (; i < end; i++) {
+          var div = document.createElement('div');
+          div.appendChild(document.createTextNode(i));
+          container.appendChild(div);
+        }
+        this.refresh();
+      });
+    </script>
+  </body>
+</html>
