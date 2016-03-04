@@ -34,6 +34,7 @@ loadMaster.off();
 ## 事件说明
 
 - eles 都是原生的elements数组
+- dir 为true的时候是往下滚，false为往上滚
 - 事件回调里面的this对象都指向当前LoadMaster实例对象
 
 
@@ -41,12 +42,12 @@ loadMaster.off();
 //eles 都是原生的elements数组
 
 //当指定的元素移动到距离当前屏幕上方指定距离的时候调用的回调事件
-loadMaster.on('above', function(eles) {
+loadMaster.on('above', function(eles, dir) {
   console.log(eles);
 });
 
 //当前屏幕滚动下方，进入触发区域的元素
-loadMaster.on('below', function(eles) {
+loadMaster.on('below', function(eles, dir) {
   console.log(eles);
 });
 

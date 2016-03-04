@@ -72,14 +72,14 @@ export class LoadMaster extends EventEmitter {
     if (this.isWindowContainer) t = document.body.scrollTop;
     else t = e.target.scrollTop;
 
+    let isForward = t > this.lastTop;
+
     if (this.opts.trigger == 'both') {
-      this.above(t);
-      this.below(t);
+      this.above(t, isForward);
+      this.below(t, isForward);
     } else {
       this[this.opts.trigger](t);
     }
-
-    let isForward = t > this.lastTop;
 
     if (isForward) {
       if (this.isWindowContainer) {
@@ -118,22 +118,22 @@ export class LoadMaster extends EventEmitter {
     this.container.addEventListener('optimizedScroll', this._scrollHandle);
   }
 
-  above(top) {
+  above(top, dir) {
     let eles = this.items.filter(d => {
       return d.bottom > top - this.opts.offset - this.opts.threshold &&
               d.bottom < top - this.opts.offset;
     }).map(d => d.el);
 
-    if (eles.length) this.emit('above', eles);
+    if (eles.length) this.emit('above', eles, dir);
   }
 
-  below(top) {
+  below(top, dir) {
     let eles = this.items.filter(d => {
       return d.top > top + this.opts.offset &&
               d.top < top + this.opts.offset + this.opts.threshold;
     }).map(d => d.el);
 
-    if (eles.length) this.emit('below', eles);
+    if (eles.length) this.emit('below', eles, dir);
   }
 
   refresh() {
