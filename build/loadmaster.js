@@ -209,14 +209,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        if (this.isWindowContainer) t = document.body.scrollTop;else t = e.target.scrollTop;
 
+	        var isForward = t > this.lastTop;
+
 	        if (this.opts.trigger == 'both') {
-	          this.above(t);
-	          this.below(t);
+	          this.above(t, isForward);
+	          this.below(t, isForward);
 	        } else {
 	          this[this.opts.trigger](t);
 	        }
-
-	        var isForward = t > this.lastTop;
 
 	        if (isForward) {
 	          if (this.isWindowContainer) {
@@ -257,7 +257,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }, {
 	      key: 'above',
-	      value: function above(top) {
+	      value: function above(top, dir) {
 	        var _this2 = this;
 
 	        var eles = this.items.filter(function (d) {
@@ -266,11 +266,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return d.el;
 	        });
 
-	        if (eles.length) this.emit('above', eles);
+	        if (eles.length) this.emit('above', eles, dir);
 	      }
 	    }, {
 	      key: 'below',
-	      value: function below(top) {
+	      value: function below(top, dir) {
 	        var _this3 = this;
 
 	        var eles = this.items.filter(function (d) {
@@ -279,7 +279,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return d.el;
 	        });
 
-	        if (eles.length) this.emit('below', eles);
+	        if (eles.length) this.emit('below', eles, dir);
 	      }
 	    }, {
 	      key: 'refresh',
