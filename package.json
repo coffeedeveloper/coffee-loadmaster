@@ -1,6 +1,6 @@
 {
-  "name": "coffee-loadmaster",
-  "version": "0.0.4",
+  "name": "@flyme/loadmaster",
+  "version": "0.0.5",
   "description": "load module",
   "main": "src/index.js",
   "scripts": {
@@ -11,6 +11,9 @@
   "keywords": [
     "load"
   ],
+  "publishConfig": {
+    "registry": "http://172.17.132.227:8888"
+  },
   "author": "CoffeeDeveloper",
   "repository": {
     "type": "git",

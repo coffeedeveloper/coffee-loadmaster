@@ -7,6 +7,7 @@ const defaults = {
   trigger: 'both',
   event: 'scroll', //触发事件
   items: null,
+  optimize: true, //是否做滚动优化
 };
 
 const each = (arr, cb) => {
@@ -115,7 +116,7 @@ export class LoadMaster extends EventEmitter {
     this.lastTop = 0;
     this._scrollHandle = this._scroll.bind(this);
 
-    this.container.addEventListener('optimizedScroll', this._scrollHandle);
+    this.container.addEventListener(this.opts.optimize ? 'optimizedScroll' : 'scroll', this._scrollHandle);
   }
 
   above(top, dir) {

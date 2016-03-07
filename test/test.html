@@ -42,7 +42,8 @@
       fill();
 
       var lm = new LoadMaster({
-        items: '#container div'
+        items: '#container div',
+        optimize: false
       });
 
       lm.on('above', function(eles) {

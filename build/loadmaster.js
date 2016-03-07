@@ -138,9 +138,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    offset: window.innerHeight, //触发安全间距
 	    trigger: 'both',
 	    event: 'scroll', //触发事件
-	    items: null
-	  };
+	    items: null,
+	    optimize: true };
 
+	  //是否做滚动优化
 	  var each = function each(arr, cb) {
 	    var len = arr.length;
 	    var r = [];
@@ -253,7 +254,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.lastTop = 0;
 	        this._scrollHandle = this._scroll.bind(this);
 
-	        this.container.addEventListener('optimizedScroll', this._scrollHandle);
+	        this.container.addEventListener(this.opts.optimize ? 'optimizedScroll' : 'scroll', this._scrollHandle);
 	      }
 	    }, {
 	      key: 'above',
