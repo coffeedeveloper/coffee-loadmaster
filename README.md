@@ -9,6 +9,7 @@ var loadMaster = new LoadMaster({
   threshold: window.innerHeight, //触发的区域高度，提供像素数字，默认是容器的一屏高度
   trigger: 'both', //触发的事件，有三个值above/below/both。both就是above和below事件都触发
   items: 'div', //触发的元素列表，提供选择字符串
+  optimize: true, //是否做滚动优化
 });
 
 ```
