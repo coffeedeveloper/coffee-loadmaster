@@ -75,11 +75,32 @@ export class LoadMaster extends EventEmitter {
 
     let isForward = t > this.lastTop;
 
-    if (this.opts.trigger == 'both') {
-      this.above(t, isForward);
-      this.below(t, isForward);
+    let absTop = Math.abs(t - this.lastTop);
+    let isFast = absTop > this.opts.offset;
+
+    if (isFast) {
+      let p = parseInt(absTop / this.opts.offset) + 1;
+      let ts = [];
+      for (let i = 0; i < p; i++) {
+        ts.push(this.lastTop + i * this.opts.offset);
+      }
+      !isForward && (ts.reverse());
+      ts.push(t);
+      ts.map((t) => {
+        if (this.opts.trigger == 'both') {
+          this.above(t, isForward);
+          this.below(t, isForward);
+        } else {
+          this[this.opts.trigger](t, isForward);
+        }
+      });
     } else {
-      this[this.opts.trigger](t);
+      if (this.opts.trigger == 'both') {
+        this.above(t, isForward);
+        this.below(t, isForward);
+      } else {
+        this[this.opts.trigger](t, isForward);
+      }
     }
 
     if (isForward) {
@@ -119,22 +140,22 @@ export class LoadMaster extends EventEmitter {
     this.container.addEventListener(this.opts.optimize ? 'optimizedScroll' : 'scroll', this._scrollHandle);
   }
 
-  above(top, dir) {
+  above(top, dir, isFast, absTop) {
     let eles = this.items.filter(d => {
       return d.bottom > top - this.opts.offset - this.opts.threshold &&
               d.bottom < top - this.opts.offset;
     }).map(d => d.el);
 
-    if (eles.length) this.emit('above', eles, dir);
+    if (eles.length) this.emit('above', eles, dir, isFast);
   }
 
-  below(top, dir) {
+  below(top, dir, isFast, absTop) {
     let eles = this.items.filter(d => {
       return d.top > top + this.opts.offset &&
               d.top < top + this.opts.offset + this.opts.threshold;
     }).map(d => d.el);
 
-    if (eles.length) this.emit('below', eles, dir);
+    if (eles.length) this.emit('below', eles, dir, isFast);
   }
 
   refresh() {

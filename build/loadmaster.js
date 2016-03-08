@@ -205,6 +205,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	      key: '_scroll',
 	      value: function _scroll(e) {
+	        var _this2 = this;
+
 	        var t = 0;
 	        var target = e.target;
 
@@ -212,11 +214,32 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        var isForward = t > this.lastTop;
 
-	        if (this.opts.trigger == 'both') {
-	          this.above(t, isForward);
-	          this.below(t, isForward);
+	        var absTop = Math.abs(t - this.lastTop);
+	        var isFast = absTop > this.opts.offset;
+
+	        if (isFast) {
+	          var p = parseInt(absTop / this.opts.offset) + 1;
+	          var ts = [];
+	          for (var i = 0; i < p; i++) {
+	            ts.push(this.lastTop + i * this.opts.offset);
+	          }
+	          !isForward && ts.reverse();
+	          ts.push(t);
+	          ts.map(function (t) {
+	            if (_this2.opts.trigger == 'both') {
+	              _this2.above(t, isForward);
+	              _this2.below(t, isForward);
+	            } else {
+	              _this2[_this2.opts.trigger](t, isForward);
+	            }
+	          });
 	        } else {
-	          this[this.opts.trigger](t);
+	          if (this.opts.trigger == 'both') {
+	            this.above(t, isForward);
+	            this.below(t, isForward);
+	          } else {
+	            this[this.opts.trigger](t, isForward);
+	          }
 	        }
 
 	        if (isForward) {
@@ -258,29 +281,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }, {
 	      key: 'above',
-	      value: function above(top, dir) {
-	        var _this2 = this;
-
-	        var eles = this.items.filter(function (d) {
-	          return d.bottom > top - _this2.opts.offset - _this2.opts.threshold && d.bottom < top - _this2.opts.offset;
-	        }).map(function (d) {
-	          return d.el;
-	        });
-
-	        if (eles.length) this.emit('above', eles, dir);
-	      }
-	    }, {
-	      key: 'below',
-	      value: function below(top, dir) {
+	      value: function above(top, dir, isFast, absTop) {
 	        var _this3 = this;
 
 	        var eles = this.items.filter(function (d) {
-	          return d.top > top + _this3.opts.offset && d.top < top + _this3.opts.offset + _this3.opts.threshold;
+	          return d.bottom > top - _this3.opts.offset - _this3.opts.threshold && d.bottom < top - _this3.opts.offset;
 	        }).map(function (d) {
 	          return d.el;
 	        });
 
-	        if (eles.length) this.emit('below', eles, dir);
+	        if (eles.length) this.emit('above', eles, dir, isFast);
+	      }
+	    }, {
+	      key: 'below',
+	      value: function below(top, dir, isFast, absTop) {
+	        var _this4 = this;
+
+	        var eles = this.items.filter(function (d) {
+	          return d.top > top + _this4.opts.offset && d.top < top + _this4.opts.offset + _this4.opts.threshold;
+	        }).map(function (d) {
+	          return d.el;
+	        });
+
+	        if (eles.length) this.emit('below', eles, dir, isFast);
 	      }
 	    }, {
 	      key: 'refresh',
