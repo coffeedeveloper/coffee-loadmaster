@@ -221,9 +221,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          var p = parseInt(absTop / this.opts.offset) + 1;
 	          var ts = [];
 	          for (var i = 0; i < p; i++) {
-	            ts.push(this.lastTop + i * this.opts.offset);
+	            ts.push(this.lastTop + i * this.opts.offset * (isForward ? 1 : -1));
 	          }
-	          !isForward && ts.reverse();
 	          ts.push(t);
 	          ts.map(function (t) {
 	            if (_this2.opts.trigger == 'both') {

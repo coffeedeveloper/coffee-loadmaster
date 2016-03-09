@@ -82,9 +82,8 @@ export class LoadMaster extends EventEmitter {
       let p = parseInt(absTop / this.opts.offset) + 1;
       let ts = [];
       for (let i = 0; i < p; i++) {
-        ts.push(this.lastTop + i * this.opts.offset);
+        ts.push(this.lastTop + (i * this.opts.offset * (isForward ? 1 : -1)));
       }
-      !isForward && (ts.reverse());
       ts.push(t);
       ts.map((t) => {
         if (this.opts.trigger == 'both') {

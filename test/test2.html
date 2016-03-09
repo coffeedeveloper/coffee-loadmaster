@@ -7,10 +7,10 @@
     <meta name="render" content="webkit">
     <title>测试</title>
     <style media="screen">
-      #container {
+      /*#container {
         height: 400px;
         overflow: auto;
-      }
+      }*/
       #container div {
         border: 2px solid #000;
         height: 90%;
@@ -35,6 +35,7 @@
     <script type="text/javascript" src="../build/loadmaster.js"></script>
     <script type="text/javascript">
       var container = document.querySelector('#container');
+      // var container = document.body;
       var i = 0;
       function fill() {
         for (i = 0; i < 20; i++) {
@@ -47,7 +48,6 @@
       fill();
 
       var lm = new LoadMaster({
-        container: '#container',
         items: '#container div'
       });
 
@@ -65,7 +65,7 @@
         console.log('come to end');
         var end = i + 10;
 
-        if (end >= 40) this.off();
+        //if (end >= 40) this.off();
 
         for (; i < end; i++) {
           var div = document.createElement('div');
