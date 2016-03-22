@@ -180,10 +180,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	        !options.offset && (_this.opts.offset = _this.container.offsetHeight);
 	      }
 
+	      _this.on('newListener', function (event, listener) {
+	        if (event == 'curr') {
+	          setTimeout(function () {
+	            _this.curr(0, undefined);
+	          }, 0);
+	        }
+	      });
+
 	      _this._meta();
 	      _this._bindEvent();
 	      return _this;
 	    }
+
+	    // on(eventName, cb) {
+	    //   console.log(eventName, cb);
+	    //   super.on(eventName, cb);
+	    // }
 
 	    _createClass(LoadMaster, [{
 	      key: '_meta',
@@ -226,18 +239,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	          ts.push(t);
 	          ts.map(function (t) {
 	            if (_this2.opts.trigger == 'both') {
-	              _this2.above(t, isForward);
-	              _this2.below(t, isForward);
+	              _this2.above(t, isForward, isFast);
+	              _this2.curr(t, isForward, isFast);
+	              _this2.below(t, isForward, isFast);
 	            } else {
-	              _this2[_this2.opts.trigger](t, isForward);
+	              _this2[_this2.opts.trigger](t, isForward, isFast);
 	            }
 	          });
 	        } else {
 	          if (this.opts.trigger == 'both') {
-	            this.above(t, isForward);
-	            this.below(t, isForward);
+	            this.above(t, isForward, isFast);
+	            this.curr(t, isForward, isFast);
+	            this.below(t, isForward, isFast);
 	          } else {
-	            this[this.opts.trigger](t, isForward);
+	            this[this.opts.trigger](t, isForward, isFast);
 	          }
 	        }
 
@@ -280,7 +295,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }, {
 	      key: 'above',
-	      value: function above(top, dir, isFast, absTop) {
+	      value: function above(top, dir, isFast) {
 	        var _this3 = this;
 
 	        var eles = this.items.filter(function (d) {
@@ -292,8 +307,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (eles.length) this.emit('above', eles, dir, isFast);
 	      }
 	    }, {
+	      key: 'curr',
+	      value: function curr(top, dir, isFast) {
+	        var eles = this.items.filter(function (d) {
+	          return d.top >= top && d.top <= top + window.innerHeight || d.bottom >= top && d.bottom <= top + window.innerHeight;
+	        }).map(function (d) {
+	          return d.el;
+	        });
+
+	        if (eles.length) this.emit('curr', eles, dir, isFast);
+	      }
+	    }, {
 	      key: 'below',
-	      value: function below(top, dir, isFast, absTop) {
+	      value: function below(top, dir, isFast) {
 	        var _this4 = this;
 
 	        var eles = this.items.filter(function (d) {

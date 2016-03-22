@@ -44,9 +44,22 @@ export class LoadMaster extends EventEmitter {
       !options.offset && (this.opts.offset = this.container.offsetHeight);
     }
 
+    this.on('newListener', (event, listener) => {
+      if (event == 'curr') {
+        setTimeout(() => {
+          this.curr(0, undefined);
+        }, 0);
+      }
+    });
+
     this._meta();
     this._bindEvent();
   }
+
+  // on(eventName, cb) {
+  //   console.log(eventName, cb);
+  //   super.on(eventName, cb);
+  // }
 
   _meta() {
     this.eles = this.isWindowContainer ?
@@ -87,18 +100,20 @@ export class LoadMaster extends EventEmitter {
       ts.push(t);
       ts.map((t) => {
         if (this.opts.trigger == 'both') {
-          this.above(t, isForward);
-          this.below(t, isForward);
+          this.above(t, isForward, isFast);
+          this.curr(t, isForward, isFast);
+          this.below(t, isForward, isFast);
         } else {
-          this[this.opts.trigger](t, isForward);
+          this[this.opts.trigger](t, isForward, isFast);
         }
       });
     } else {
       if (this.opts.trigger == 'both') {
-        this.above(t, isForward);
-        this.below(t, isForward);
+        this.above(t, isForward, isFast);
+        this.curr(t, isForward, isFast);
+        this.below(t, isForward, isFast);
       } else {
-        this[this.opts.trigger](t, isForward);
+        this[this.opts.trigger](t, isForward, isFast);
       }
     }
 
@@ -139,7 +154,7 @@ export class LoadMaster extends EventEmitter {
     this.container.addEventListener(this.opts.optimize ? 'optimizedScroll' : 'scroll', this._scrollHandle);
   }
 
-  above(top, dir, isFast, absTop) {
+  above(top, dir, isFast) {
     let eles = this.items.filter(d => {
       return d.bottom > top - this.opts.offset - this.opts.threshold &&
               d.bottom < top - this.opts.offset;
@@ -148,7 +163,16 @@ export class LoadMaster extends EventEmitter {
     if (eles.length) this.emit('above', eles, dir, isFast);
   }
 
-  below(top, dir, isFast, absTop) {
+  curr(top, dir, isFast) {
+    let eles = this.items.filter(d => {
+      return (d.top >= top && d.top <= top + window.innerHeight) ||
+              (d.bottom >= top && d.bottom <= top + window.innerHeight)
+    }).map(d => d.el);
+
+    if (eles.length) this.emit('curr', eles, dir, isFast);
+  }
+
+  below(top, dir, isFast) {
     let eles = this.items.filter(d => {
       return d.top > top + this.opts.offset &&
               d.top < top + this.opts.offset + this.opts.threshold;

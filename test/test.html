@@ -50,12 +50,17 @@
         console.log('above', eles);
       });
 
+      lm.on('curr', function(eles) {
+        console.log('curr', eles);
+      });
+
       lm.on('below', function(eles) {
         console.log('below', eles);
       });
 
       lm.on('end', function() {
         console.log('come to end');
+        fill();
       });
     </script>
   </body>
