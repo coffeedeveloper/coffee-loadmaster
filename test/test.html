@@ -46,16 +46,21 @@
         optimize: false
       });
 
-      lm.on('above', function(eles) {
-        console.log('above', eles);
+      lm.on('above', function(eles, dir) {
+        console.log('above', eles, dir);
       });
 
-      lm.on('below', function(eles) {
-        console.log('below', eles);
+      lm.on('curr', function(eles, dir) {
+        console.log('curr', eles, dir);
+      });
+
+      lm.on('below', function(eles, dir) {
+        console.log('below', eles, dir);
       });
 
       lm.on('end', function() {
         console.log('come to end');
+        fill();
       });
     </script>
   </body>

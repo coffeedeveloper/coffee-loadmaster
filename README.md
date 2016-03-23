@@ -47,6 +47,11 @@ loadMaster.on('above', function(eles, dir) {
   console.log(eles);
 });
 
+//当前屏幕的元素，如果dir为undefined则为默认进来的首屏
+loadMaster.on('curr', function(eles, dir) {
+  console.log(eles);
+});
+
 //当前屏幕滚动下方，进入触发区域的元素
 loadMaster.on('below', function(eles, dir) {
   console.log(eles);
