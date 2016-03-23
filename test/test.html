@@ -24,6 +24,9 @@
     </style>
   </head>
   <body>
+    <div id="xxoo">
+        xxoo
+    </div>
     <div id="container">
 
     </div>
@@ -46,22 +49,24 @@
         optimize: false
       });
 
-      lm.on('above', function(eles, dir) {
-        console.log('above', eles, dir);
+      lm.on('above', function(eles, dir, data, isFast) {
+        console.log('above', eles, dir, data, isFast);
       });
 
-      lm.on('curr', function(eles, dir) {
-        console.log('curr', eles, dir);
+      lm.on('curr', function(eles, dir, data, isFast) {
+        console.log('curr', eles, dir, data, isFast);
       });
 
-      lm.on('below', function(eles, dir) {
-        console.log('below', eles, dir);
+      lm.on('below', function(eles, dir, data, isFast) {
+        console.log('below', eles, dir, data, isFast);
       });
 
       lm.on('end', function() {
         console.log('come to end');
         fill();
       });
+
+      console.log(LoadMaster.calc(document.querySelector('#xxoo')));
     </script>
   </body>
 </html>
