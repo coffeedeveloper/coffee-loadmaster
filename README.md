@@ -48,7 +48,7 @@ loadMaster.on('above', function(eles, dir) {
 });
 
 //当前屏幕的元素，如果dir为undefined则为默认进来的首屏
-loadMaster.on('above', function(eles, dir) {
+loadMaster.on('curr', function(eles, dir) {
   console.log(eles);
 });
 
