@@ -4,7 +4,7 @@ const defaults = {
   container: window, //容器
   threshold: window.innerHeight, //触发的区域
   offset: window.innerHeight, //触发安全间距
-  trigger: 'both',
+  trigger: ['above', 'curr', 'below'],
   event: 'scroll', //触发事件
   items: null,
   optimize: true, //是否做滚动优化
@@ -25,9 +25,34 @@ const extend = function(target) {
     for (let p in arg) target[p] = arg[p];
   }
   return target;
-}
+};
+
+const calc = (el) => {
+  let rect = el.getBoundingClientRect();
+
+  return {
+    el,
+    bottom: rect.top + document.body.scrollTop + el.offsetHeight,
+    height: el.offsetHeight,
+    top: rect.top + document.body.scrollTop,
+    left: rect.left + document.body.scrollLeft
+  };
+};
 
 export class LoadMaster extends EventEmitter {
+  static calc(eles) {
+    if (typeof eles == 'string') eles = document.querySelectorAll(eles);
+    let r;
+    if (eles.length) {
+      r = each(eles, (el, i) => {
+        return calc(el);
+      });
+    } else {
+      r = calc(eles);
+    }
+    return r;
+  }
+
   constructor(options) {
     super();
 
@@ -66,17 +91,7 @@ export class LoadMaster extends EventEmitter {
       document.querySelectorAll(this.opts.items) :
       this.container.querySelectorAll(this.opts.items);
 
-    this.items = each(this.eles, (el, i) => {
-      let rect = el.getBoundingClientRect();
-
-      return {
-        el,
-        bottom: rect.top + document.body.scrollTop + el.offsetHeight,
-        height: el.offsetHeight,
-        top: rect.top + document.body.scrollTop,
-        left: rect.left + document.body.scrollLeft
-      };
-    });
+    this.items = each(this.eles, (el, i) => calc(el));
   }
 
   _scroll(e) {
@@ -99,22 +114,14 @@ export class LoadMaster extends EventEmitter {
       }
       ts.push(t);
       ts.map((t) => {
-        if (this.opts.trigger == 'both') {
-          this.above(t, isForward, isFast);
-          this.curr(t, isForward, isFast);
-          this.below(t, isForward, isFast);
-        } else {
-          this[this.opts.trigger](t, isForward, isFast);
-        }
+        this.opts.trigger.map(d => {
+          this[d](t, isForward, isFast);
+        });
       });
     } else {
-      if (this.opts.trigger == 'both') {
-        this.above(t, isForward, isFast);
-        this.curr(t, isForward, isFast);
-        this.below(t, isForward, isFast);
-      } else {
-        this[this.opts.trigger](t, isForward, isFast);
-      }
+      this.opts.trigger.map(d => {
+        this[d](t, isForward, isFast);
+      });
     }
 
     if (isForward) {
@@ -158,27 +165,27 @@ export class LoadMaster extends EventEmitter {
     let eles = this.items.filter(d => {
       return d.bottom > top - this.opts.offset - this.opts.threshold &&
               d.bottom < top - this.opts.offset;
-    }).map(d => d.el);
+    });
 
-    if (eles.length) this.emit('above', eles, dir, isFast);
+    if (eles.length) this.emit('above', eles.map(d => d.el), dir, top, eles, isFast);
   }
 
   curr(top, dir, isFast) {
     let eles = this.items.filter(d => {
       return (d.top >= top && d.top <= top + window.innerHeight) ||
               (d.bottom >= top && d.bottom <= top + window.innerHeight)
-    }).map(d => d.el);
+    });
 
-    if (eles.length) this.emit('curr', eles, dir, isFast);
+    if (eles.length) this.emit('curr', eles.map(d => d.el), dir, top, eles, isFast);
   }
 
   below(top, dir, isFast) {
     let eles = this.items.filter(d => {
       return d.top > top + this.opts.offset &&
               d.top < top + this.opts.offset + this.opts.threshold;
-    }).map(d => d.el);
+    });
 
-    if (eles.length) this.emit('below', eles, dir, isFast);
+    if (eles.length) this.emit('below', eles.map(d => d.el), dir, top, eles, isFast);
   }
 
   refresh() {

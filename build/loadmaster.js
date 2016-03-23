@@ -90,6 +90,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }
 
+	  function _possibleConstructorReturn(self, call) {
+	    if (!self) {
+	      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	    }
+
+	    return call && ((typeof call === 'undefined' ? 'undefined' : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+	  }
+
 	  var _createClass = function () {
 	    function defineProperties(target, props) {
 	      for (var i = 0; i < props.length; i++) {
@@ -107,14 +115,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return Constructor;
 	    };
 	  }();
-
-	  function _possibleConstructorReturn(self, call) {
-	    if (!self) {
-	      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-	    }
-
-	    return call && ((typeof call === 'undefined' ? 'undefined' : _typeof(call)) === "object" || typeof call === "function") ? call : self;
-	  }
 
 	  function _inherits(subClass, superClass) {
 	    if (typeof superClass !== "function" && superClass !== null) {
@@ -136,7 +136,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    container: window, //容器
 	    threshold: window.innerHeight, //触发的区域
 	    offset: window.innerHeight, //触发安全间距
-	    trigger: 'both',
+	    trigger: ['above', 'curr', 'below'],
 	    event: 'scroll', //触发事件
 	    items: null,
 	    optimize: true };
@@ -161,8 +161,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return target;
 	  };
 
+	  var _calc = function _calc(el) {
+	    var rect = el.getBoundingClientRect();
+
+	    return {
+	      el: el,
+	      bottom: rect.top + document.body.scrollTop + el.offsetHeight,
+	      height: el.offsetHeight,
+	      top: rect.top + document.body.scrollTop,
+	      left: rect.left + document.body.scrollLeft
+	    };
+	  };
+
 	  var LoadMaster = exports.LoadMaster = function (_EventEmitter) {
 	    _inherits(LoadMaster, _EventEmitter);
+
+	    _createClass(LoadMaster, null, [{
+	      key: 'calc',
+	      value: function calc(eles) {
+	        if (typeof eles == 'string') eles = document.querySelectorAll(eles);
+	        var r = undefined;
+	        if (eles.length) {
+	          r = each(eles, function (el, i) {
+	            return _calc(el);
+	          });
+	        } else {
+	          r = _calc(eles);
+	        }
+	        return r;
+	      }
+	    }]);
 
 	    function LoadMaster(options) {
 	      _classCallCheck(this, LoadMaster);
@@ -204,15 +232,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.eles = this.isWindowContainer ? document.querySelectorAll(this.opts.items) : this.container.querySelectorAll(this.opts.items);
 
 	        this.items = each(this.eles, function (el, i) {
-	          var rect = el.getBoundingClientRect();
-
-	          return {
-	            el: el,
-	            bottom: rect.top + document.body.scrollTop + el.offsetHeight,
-	            height: el.offsetHeight,
-	            top: rect.top + document.body.scrollTop,
-	            left: rect.left + document.body.scrollLeft
-	          };
+	          return _calc(el);
 	        });
 	      }
 	    }, {
@@ -238,22 +258,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	          }
 	          ts.push(t);
 	          ts.map(function (t) {
-	            if (_this2.opts.trigger == 'both') {
-	              _this2.above(t, isForward, isFast);
-	              _this2.curr(t, isForward, isFast);
-	              _this2.below(t, isForward, isFast);
-	            } else {
-	              _this2[_this2.opts.trigger](t, isForward, isFast);
-	            }
+	            _this2.opts.trigger.map(function (d) {
+	              _this2[d](t, isForward, isFast);
+	            });
 	          });
 	        } else {
-	          if (this.opts.trigger == 'both') {
-	            this.above(t, isForward, isFast);
-	            this.curr(t, isForward, isFast);
-	            this.below(t, isForward, isFast);
-	          } else {
-	            this[this.opts.trigger](t, isForward, isFast);
-	          }
+	          this.opts.trigger.map(function (d) {
+	            _this2[d](t, isForward, isFast);
+	          });
 	        }
 
 	        if (isForward) {
@@ -300,22 +312,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        var eles = this.items.filter(function (d) {
 	          return d.bottom > top - _this3.opts.offset - _this3.opts.threshold && d.bottom < top - _this3.opts.offset;
-	        }).map(function (d) {
-	          return d.el;
 	        });
 
-	        if (eles.length) this.emit('above', eles, dir, isFast);
+	        if (eles.length) this.emit('above', eles.map(function (d) {
+	          return d.el;
+	        }), dir, top, eles, isFast);
 	      }
 	    }, {
 	      key: 'curr',
 	      value: function curr(top, dir, isFast) {
 	        var eles = this.items.filter(function (d) {
 	          return d.top >= top && d.top <= top + window.innerHeight || d.bottom >= top && d.bottom <= top + window.innerHeight;
-	        }).map(function (d) {
-	          return d.el;
 	        });
 
-	        if (eles.length) this.emit('curr', eles, dir, isFast);
+	        if (eles.length) this.emit('curr', eles.map(function (d) {
+	          return d.el;
+	        }), dir, top, eles, isFast);
 	      }
 	    }, {
 	      key: 'below',
@@ -324,11 +336,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        var eles = this.items.filter(function (d) {
 	          return d.top > top + _this4.opts.offset && d.top < top + _this4.opts.offset + _this4.opts.threshold;
-	        }).map(function (d) {
-	          return d.el;
 	        });
 
-	        if (eles.length) this.emit('below', eles, dir, isFast);
+	        if (eles.length) this.emit('below', eles.map(function (d) {
+	          return d.el;
+	        }), dir, top, eles, isFast);
 	      }
 	    }, {
 	      key: 'refresh',
