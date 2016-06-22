@@ -1,8 +1,8 @@
 {
   "name": "@flyme/loadmaster",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "description": "load module",
-  "main": "src/index.js",
+  "main": "build/loadmaster.js",
   "scripts": {
     "dev": "webpack --watch",
     "build": "webpack && uglifyjs -o build/loadmaster.min.js build/loadmaster.js",
