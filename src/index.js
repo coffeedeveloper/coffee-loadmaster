@@ -39,7 +39,7 @@ const calc = (el) => {
   };
 };
 
-export class LoadMaster extends EventEmitter {
+export default class LoadMaster extends EventEmitter {
   static calc(eles) {
     if (typeof eles == 'string') eles = document.querySelectorAll(eles);
     let r;
