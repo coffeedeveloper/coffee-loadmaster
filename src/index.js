@@ -162,27 +162,29 @@ export default class LoadMaster extends EventEmitter {
   }
 
   above(top, dir, isFast) {
+    let k = top - this.opts.offset;
+    let t = k - this.opts.threshold;
     let eles = this.items.filter(d => {
-      return d.bottom > top - this.opts.offset - this.opts.threshold &&
-              d.bottom < top - this.opts.offset;
+      return d.bottom > t && d.bottom < k;
     });
 
     if (eles.length) this.emit('above', eles.map(d => d.el), dir, top, eles, isFast);
   }
 
   curr(top, dir, isFast) {
+    let k = top + window.innerHeight;
     let eles = this.items.filter(d => {
-      return (d.top >= top && d.top <= top + window.innerHeight) ||
-              (d.bottom >= top && d.bottom <= top + window.innerHeight)
+      return (d.top >= top && d.top <= k) || (d.bottom >= top && d.bottom <= k);
     });
 
     if (eles.length) this.emit('curr', eles.map(d => d.el), dir, top, eles, isFast);
   }
 
   below(top, dir, isFast) {
+    let k = top + this.opts.offset;
+    let t = k + this.opts.threshold;
     let eles = this.items.filter(d => {
-      return d.top > top + this.opts.offset &&
-              d.top < top + this.opts.offset + this.opts.threshold;
+      return d.top > k && d.top < t;
     });
 
     if (eles.length) this.emit('below', eles.map(d => d.el), dir, top, eles, isFast);

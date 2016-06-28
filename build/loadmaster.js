@@ -265,10 +265,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	      key: 'above',
 	      value: function above(top, dir, isFast) {
-	        var _this3 = this;
-
+	        var k = top - this.opts.offset;
+	        var t = k - this.opts.threshold;
 	        var eles = this.items.filter(function (d) {
-	          return d.bottom > top - _this3.opts.offset - _this3.opts.threshold && d.bottom < top - _this3.opts.offset;
+	          return d.bottom > t && d.bottom < k;
 	        });
 
 	        if (eles.length) this.emit('above', eles.map(function (d) {
@@ -278,8 +278,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	      key: 'curr',
 	      value: function curr(top, dir, isFast) {
+	        var k = top + window.innerHeight;
 	        var eles = this.items.filter(function (d) {
-	          return d.top >= top && d.top <= top + window.innerHeight || d.bottom >= top && d.bottom <= top + window.innerHeight;
+	          return d.top >= top && d.top <= k || d.bottom >= top && d.bottom <= k;
 	        });
 
 	        if (eles.length) this.emit('curr', eles.map(function (d) {
@@ -289,10 +290,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	      key: 'below',
 	      value: function below(top, dir, isFast) {
-	        var _this4 = this;
-
+	        var k = top + this.opts.offset;
+	        var t = k + this.opts.threshold;
 	        var eles = this.items.filter(function (d) {
-	          return d.top > top + _this4.opts.offset && d.top < top + _this4.opts.offset + _this4.opts.threshold;
+	          return d.top > k && d.top < t;
 	        });
 
 	        if (eles.length) this.emit('below', eles.map(function (d) {
