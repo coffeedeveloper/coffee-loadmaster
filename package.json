@@ -1,6 +1,6 @@
 {
   "name": "coffee-loadmaster",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "load module",
   "main": "build/loadmaster.js",
   "scripts": {

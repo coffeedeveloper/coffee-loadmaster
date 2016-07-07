@@ -189,7 +189,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.eles = this.isWindowContainer ? document.querySelectorAll(this.opts.items) : this.container.querySelectorAll(this.opts.items);
 
 	        this.items = each(this.eles, function (el, i) {
-	          return _calc(el);
+	          return extend({ index: i }, _calc(el));
 	        });
 	      }
 	    }, {

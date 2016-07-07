@@ -91,7 +91,7 @@ export default class LoadMaster extends EventEmitter {
       document.querySelectorAll(this.opts.items) :
       this.container.querySelectorAll(this.opts.items);
 
-    this.items = each(this.eles, (el, i) => calc(el));
+    this.items = each(this.eles, (el, i) => extend({index: i}, calc(el)));
   }
 
   _scroll(e) {
