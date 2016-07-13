@@ -174,14 +174,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 
 	      _this._meta();
-	      _this._bindEvent();
+	      _this.bind();
 	      return _this;
 	    }
-
-	    // on(eventName, cb) {
-	    //   console.log(eventName, cb);
-	    //   super.on(eventName, cb);
-	    // }
 
 	    (0, _createClass3.default)(LoadMaster, [{
 	      key: '_meta',
@@ -240,8 +235,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.lastTop = t;
 	      }
 	    }, {
-	      key: '_bindEvent',
-	      value: function _bindEvent() {
+	      key: 'bind',
+	      value: function bind() {
 	        var throttle = function throttle(type, name, obj) {
 	          obj = obj || window;
 	          var running = false;
@@ -308,7 +303,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	      key: 'off',
 	      value: function off() {
-	        this.container.removeEventListener('optimizedScroll', this._scrollHandle);
+	        this.container.removeEventListener(this.opts.optimize ? 'optimizedScroll' : 'scroll', this._scrollHandle);
 	      }
 	    }]);
 	    return LoadMaster;

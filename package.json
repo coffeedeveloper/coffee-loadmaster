@@ -1,11 +1,11 @@
 {
   "name": "coffee-loadmaster",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "load module",
   "main": "build/loadmaster.js",
   "scripts": {
     "dev": "webpack --watch",
-    "build": "webpack && uglifyjs -o build/loadmaster.min.js build/loadmaster.js",
+    "release": "webpack && uglifyjs -o build/loadmaster.min.js build/loadmaster.js",
     "test": "mocha test/index.js"
   },
   "keywords": [

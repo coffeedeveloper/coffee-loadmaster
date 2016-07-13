@@ -78,13 +78,8 @@ export default class LoadMaster extends EventEmitter {
     });
 
     this._meta();
-    this._bindEvent();
+    this.bind();
   }
-
-  // on(eventName, cb) {
-  //   console.log(eventName, cb);
-  //   super.on(eventName, cb);
-  // }
 
   _meta() {
     this.eles = this.isWindowContainer ?
@@ -139,7 +134,7 @@ export default class LoadMaster extends EventEmitter {
     this.lastTop = t;
   }
 
-  _bindEvent() {
+  bind() {
     const throttle = (type, name, obj) => {
       obj = obj || window;
       var running = false;
@@ -195,6 +190,6 @@ export default class LoadMaster extends EventEmitter {
   }
 
   off() {
-    this.container.removeEventListener('optimizedScroll', this._scrollHandle);
+    this.container.removeEventListener(this.opts.optimize ? 'optimizedScroll' : 'scroll', this._scrollHandle);
   }
 }
