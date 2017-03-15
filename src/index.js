@@ -63,16 +63,18 @@ export default class LoadMaster extends EventEmitter {
       this.opts.container;
 
     this.isWindowContainer = this.container === window;
+    let currTop = document.body.scrollTop;
 
     if (!this.isWindowContainer) {
       !options.threshold && (this.opts.threshold = this.container.offsetHeight);
       !options.offset && (this.opts.offset = this.container.offsetHeight);
+      currTop = this.container.scrollTop;
     }
 
     this.on('newListener', (event, listener) => {
       if (event == 'curr') {
         setTimeout(() => {
-          this.curr(0, undefined);
+          this.curr(currTop, undefined);
         }, 0);
       }
     });
