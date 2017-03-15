@@ -1,7 +1,7 @@
 {
   "name": "loadmaster",
-  "version": "0.1.0",
-  "description": "页面滚动插件",
+  "version": "0.1.1",
+  "description": "用于实现滚动到底部加载，以及滚动时曝光当前页面模块，延迟加载图片等需要依托于滚动位置的任务需求。",
   "main": "lib/loadmaster.js",
   "scripts": {
     "dev": "rollup -c -w",
@@ -15,7 +15,7 @@
   "author": "CoffeeDeveloper",
   "repository": {
     "type": "git",
-    "url": "https://github.com/coffeedeveloper/coffee-loadmaster.git"
+    "url": "https://github.com/coffeedeveloper/loadmaster.git"
   },
   "license": "MIT",
   "devDependencies": {
