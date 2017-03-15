@@ -1,6 +1,6 @@
 {
-  "name": "coffee-loadmaster",
-  "version": "0.4.0",
+  "name": "loadmaster",
+  "version": "0.1.0",
   "description": "页面滚动插件",
   "main": "lib/loadmaster.js",
   "scripts": {
