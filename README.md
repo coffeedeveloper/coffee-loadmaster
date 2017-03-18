@@ -1,6 +1,12 @@
 # LoadMaster说明
 用于实现滚动到底部加载，以及滚动时曝光当前页面模块，延迟加载图片等需要依托于滚动位置的任务需求。
 
+## 安装
+
+```
+npm install loadmaster
+```
+
 ## API说明
 
 ```javascript
