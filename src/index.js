@@ -84,11 +84,17 @@ export default class LoadMaster extends EventEmitter {
   }
 
   _meta() {
-    this.eles = this.isWindowContainer ?
-      document.querySelectorAll(this.opts.items) :
-      this.container.querySelectorAll(this.opts.items);
+    if (this.opts.items !== null) {
+      this.eles = this.isWindowContainer ?
+        document.querySelectorAll(this.opts.items) :
+        this.container.querySelectorAll(this.opts.items);
 
-    this.items = each(this.eles, (el, i) => extend({index: i}, calc(el)));
+      this.items = each(this.eles, (el, i) => extend({index: i}, calc(el)));
+    } else {
+      this.eles = null
+      this.items = null
+    }
+    console.log(this.eles, this.items, this.opts.items)
   }
 
   _scroll(e) {
@@ -100,25 +106,27 @@ export default class LoadMaster extends EventEmitter {
 
     let isForward = t > this.lastTop;
 
-    let absTop = Math.abs(t - this.lastTop);
-    let isFast = absTop > this.opts.offset;
+    if (this.items !== null) {
+      let absTop = Math.abs(t - this.lastTop);
+      let isFast = absTop > this.opts.offset;
 
-    if (isFast) {
-      let p = parseInt(absTop / this.opts.offset) + 1;
-      let ts = [];
-      for (let i = 0; i < p; i++) {
-        ts.push(this.lastTop + (i * this.opts.offset * (isForward ? 1 : -1)));
-      }
-      ts.push(t);
-      ts.map((t) => {
+      if (isFast) {
+        let p = parseInt(absTop / this.opts.offset) + 1;
+        let ts = [];
+        for (let i = 0; i < p; i++) {
+          ts.push(this.lastTop + (i * this.opts.offset * (isForward ? 1 : -1)));
+        }
+        ts.push(t);
+        ts.map((t) => {
+          this.opts.trigger.map(d => {
+            this[d](t, isForward, isFast);
+          });
+        });
+      } else {
         this.opts.trigger.map(d => {
           this[d](t, isForward, isFast);
         });
-      });
-    } else {
-      this.opts.trigger.map(d => {
-        this[d](t, isForward, isFast);
-      });
+      }
     }
 
     if (isForward) {
