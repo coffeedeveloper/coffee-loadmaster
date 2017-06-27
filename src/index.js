@@ -94,7 +94,6 @@ export default class LoadMaster extends EventEmitter {
       this.eles = null
       this.items = null
     }
-    console.log(this.eles, this.items, this.opts.items)
   }
 
   _scroll(e) {
